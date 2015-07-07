@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Facebook Group Post</title>
+    <meta charset="UTF-8">
+    <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="css/nprogress.css" media="screen,projection" />
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        #point {
+            position: absolute;
+            right: 80px;
+            top: -2px;
+        }
+    </style>
+</head>
+<body ng-app="app" ng-controller="myCtrl">
+    <nav class="pink lighten-3" role="navigation">
+        <div class="nav-wrapper container">
+            <a id="logo-container" href="#" class="brand-logo center">Aswig Solutions</a>
+        </div>
+        <h4 id="point">Point: {{point}}</h4>
+    </nav>
+    <div id="index-banner" class="container">
+        <div class="section no-pad-bot">
+            <div class="container">
+                <h1 class="center purple-text text-accent-3">Ladyboy Challenge</h1>
+                <div class="row center">
+                    <h5 class="col s12 light">Find the girl in the group</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row center">
+            <div ng-repeat="choice in choices" ng-click="choiceClick(choice)" class="col s6 m6 l3 card"> 
+				<div class="front"> 
+						<img class="col s11" ng-src="{{choice.image}}" />
+				</div> 
+				<div class="back">
+					{{choice.isGirl}}
+				</div> 				
+            </div>
+        </div>
+    </div>
+
+    <footer class="page-footer pink accent-2">
+        <div class="footer-copyright">
+            <div class="container">
+                Copyright by <a class="orange-text text-lighten-3" href="http://materializecss.com">H.Pham | Aswig Solutions</a>
+            </div>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src="js/jquery-2.1.4.js"></script>
+	 <script type="text/javascript" src="js/jquery.flip.js"></script>
+    <script type="text/javascript" src="js/materialize.js"></script>
+    <script type="text/javascript" src="js/angular.js"></script>
+
+    <script>
+        function getRandomItem(input) {
+			var idx = Math.floor(Math.random() * input.length);
+            return input[idx];
+        };
+
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+            return array;
+        }
+    </script>
+
+    <script>
+        var app = angular.module('app', []);
+        app.controller('myCtrl', ['$scope', '$http', function ($scope, $http) {
+            $scope.point = 0;
+
+            $scope.choices = [];
+            $scope.leaderboard = [];
+
+            var girls = [];
+            var ladyboys = [];
+
+                loadResources();
+            //loadImage($scope.point);
+
+            $scope.choiceClick = function (item) {
+                if (item.isGirl) {
+                    $scope.point++;
+                } else {
+                    $scope.point = 0;
+                    alert("You fail");
+                }
+                loadImage($scope.point);
+            };
+
+            function loadImage(point) {
+                var items = [];
+                items.push(getRandomItem(girls));
+
+                if (point < 5) {
+                    items.push(getRandomItem(ladyboys));
+                } else if (point < 15) {
+                    //items.push 2 medium
+                    items.push(getRandomItem(ladyboys));
+                    items.push(getRandomItem(ladyboys));
+                } else {
+                    //item.push 3 hard
+                    items.push(getRandomItem(ladyboys));
+                    items.push(getRandomItem(ladyboys));
+                    items.push(getRandomItem(ladyboys));
+                };
+
+                $scope.choices = shuffleArray(items);
+				
+				$(".card").flip();
+            };
+
+            function loadResources() {
+			    var girlUrl = 'https://api.mongolab.com/api/1/databases/ladyboy_challenge/collections/girls?apiKey=Rds2DpkLY7_VqsMfmgfSo_EdzafbQvOs';
+				var ldbUrl = 'https://api.mongolab.com/api/1/databases/ladyboy_challenge/collections/ladyboys?apiKey=Rds2DpkLY7_VqsMfmgfSo_EdzafbQvOs';
+			
+			    $http.get(girlUrl).then(function(rs){
+					girls = rs.data;
+					return ldbUrl;
+				}).then($http.get).then(function(rs){
+					ladyboys = rs.data;
+					return $scope.point;
+				}).then(loadImage);
+			
+				/*
+                girls = [{ id: 1, image: "http://google.com", isGirl: true }, { id: 2, image: "http://google.com", isGirl: true },
+                    { id: 3, image: "http://google.com", isGirl: true }, { id: 4, image: "http://google.com", isGirl: true },
+                    { id: 5, image: "http://google.com", isGirl: true }]; //loadResources
+
+                ladyboys = [{ id: 1, image: "http://google.com", isGirl: false }, { id: 2, image: "http://google.com", isGirl: false },
+                    { id: 3, image: "http://google.com", isGirl: false }, { id: 4, image: "http://google.com", isGirl: false },
+                    { id: 5, image: "http://google.com", isGirl: false }]; //loadResource
+					*/
+            };
+
+            function loadLeaderboard() {
+
+            };
+
+        }
+        ]);
+
+    </script>
+
+    <!--<script type="text/javascript" src="js/app/app.js"></script>
+    <script type="text/javascript" src="js/app/services.js"></script>
+    <script type="text/javascript" src="js/app/controllers.js"></script>-->
+
+
+</body>
+
+
+
+
+
+
+
+</html>
