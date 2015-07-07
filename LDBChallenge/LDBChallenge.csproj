@@ -62,6 +62,9 @@
     <Content Include="font\material-design-icons\LICENSE.txt" />
     <Content Include="font\material-design-icons\Material-Design-Icons.svg" />
     <Content Include="index.html" />
+    <Content Include="js\angular-animate.js" />
+    <Content Include="js\angular-route.js" />
+    <Content Include="js\angular.audio.js" />
     <Content Include="js\angular.js" />
     <Content Include="js\app\app.js" />
     <Content Include="js\app\controllers.js" />
@@ -69,6 +72,8 @@
     <Content Include="js\jquery-2.1.4.js" />
     <Content Include="js\materialize.js" />
     <Content Include="js\nprogress.js" />
+    <Content Include="sound\right.wav" />
+    <Content Include="sound\wrong.wav" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +106,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

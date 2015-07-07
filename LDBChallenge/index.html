@@ -3,6 +3,8 @@
 <head>
     <title>Challenge</title>
     <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection" />
     <link type="text/css" rel="stylesheet" href="css/nprogress.css" media="screen,projection" />
     <link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css">
@@ -20,18 +22,28 @@
         }
 
 
-        /*#gameDiv {
-            min-height: calc(100vh - 70px);
-        }*/
-
         footer {
-            height:70px;
+            height: 70px;
         }
 
-
+        #gameDiv {
+            opacity: 1;
+            height: calc(100vh - 350px) !important;
+            display: block !important;
+            min-height: calc(100vh - 350px) !important;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+            #gameDiv::-webkit-scrollbar { display: none; }
+            #gameDiv.ng-hide-add.ng-hide-add-active,
+            #gameDiv.ng-hide-remove.ng-hide-remove-active {
+                -webkit-transition: all linear 1s;
+                transition: all linear 1s;
+            }
+            #gameDiv.ng-hide {  opacity: 0; }
     </style>
 </head>
-<body ng-app="app" ng-controller="myCtrl">
+<body ng-app="app" ng-controller="gameCtrl">
 
     <nav class="pink lighten-3" role="navigation">
         <div class="nav-wrapper container">
@@ -50,16 +62,13 @@
         </div>
     </div>
 
-    <div class="container" id="gameDiv">       
+    <div class="container ng-hide" ng-show="showImg" id="gameDiv">
         <div class="row center">
-            <div ng-repeat="choice in choices" ng-click="choiceClick(choice)" class="col s10 offset-s1 m10 offset-m1 l6">
+            <div ng-repeat="choice in choices" ng-click="choiceClick(choice)" class="repeated-item col s10 offset-s1 m10 offset-m1 l6">
                 <img class="col s11" ng-src="{{choice.image}}" />
-                <!--{{choice.isGirl}}-->
             </div>
         </div>
     </div>
-
-
 
     <footer class="page-footer pink accent-2">
         <div class="footer-copyright">
@@ -89,17 +98,22 @@
                 <div class="row">
                     <div class="input-field col s6">
                         <i class="material-icons prefix">account_circle</i>
-                        <input id="icon_prefix" type="text" class="validate" />
+                        <input ng-model="playerName" id="icon_prefix" type="text" class="validate" />
                         <label for="icon_prefix">Name</label>
                     </div>
                     <div class="col s6">
-                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                        <button ng-click="sendScore()" class="btn waves-effect waves-light"type="submit" name="action">
                             Submit
                             <i class="material-icons">send</i>
                         </button>
+
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Share on Facebook
+                            <i class="material-icons">public</i>
+                        </button>
                     </div>
                 </div>
-                
+
             </div>
         </div>
         <div class="modal-footer">
@@ -108,10 +122,12 @@
         </div>
     </div>
 
-
     <script type="text/javascript" src="js/jquery-2.1.4.js"></script>
     <script type="text/javascript" src="js/materialize.js"></script>
     <script type="text/javascript" src="js/angular.js"></script>
+    <script type="text/javascript" src="js/angular-animate.js"></script>
+    <script type="text/javascript" src="js/angular.audio.js"></script>
+    <script type="text/javascript" src="js/angular-route.js"></script>
 
     <script>
         function getRandomItem(input) {
@@ -131,29 +147,63 @@
     </script>
 
     <script>
-        var app = angular.module('app', []);
-        app.controller('myCtrl', ['$scope', '$http', function ($scope, $http) {
-            $scope.point = 0;
+        var app = angular.module('app', ['ngAnimate', 'ngAudio', 'ngRoute']);
 
+        app.controller('gameCtrl', ['$scope', '$http', 'ngAudio', function ($scope, $http, ngAudio) {
+            $scope.point = 0;
+            $scope.showImg = false;
+            $scope.playerName = '';
+           
             $scope.choices = [];
             $scope.leaderboard = [];
+
+            var bingoSound = ngAudio.load("/sound/right.wav");
+            var failSound = ngAudio.load("/sound/wrong.wav");
+            failSound.volume = 0.3;
 
             var girls = [];
             var ladyboys = [];
 
+            
             loadResources();
-            //loadImage($scope.point);
 
             $scope.choiceClick = function (item) {
+                $scope.showImg = false;
                 if (item.isGirl) {
+                    bingoSound.play();
                     $scope.point++;
-                    $('#rightModal').openModal();
+                    $('#rightModal').openModal({
+                        complete: function () {
+                            $scope.showImg = true;
+                            $scope.$digest();
+                        }
+                    });
                 } else {
-                    $scope.point = 0;
-                    $('#wrongModal').openModal();
+                    failSound.play();  
+                    $('#wrongModal').openModal({
+                        complete: function () {
+                            $scope.point = 0;
+                            $scope.showImg = true;
+                            $scope.$digest();
+                        }
+                    });
                 }
                 loadImage($scope.point);
             };
+
+            $scope.sendScore = function () {
+                var scoreUrl = 'https://api.mongolab.com/api/1/databases/ladyboy_challenge/collections/leaderBoard?apiKey=Rds2DpkLY7_VqsMfmgfSo_EdzafbQvOs';
+                var entry = { name: $scope.playerName, score: $scope.point };
+
+                $http.post(scoreUrl, entry).then(function () {
+                    $('#wrongModal').closeModal();
+                    $scope.point = 0;
+                    $scope.showImg = true;
+                    $scope.playerName = '';
+                    
+                });
+
+            }
 
             function loadImage(point) {
                 var items = [];
@@ -170,7 +220,8 @@
                     items.push(getRandomItem(ladyboys));
                 };
 
-                $scope.choices = shuffleArray(items);               
+                $scope.choices = shuffleArray(items);
+
             };
 
             function loadResources() {
@@ -183,26 +234,42 @@
                 }).then($http.get).then(function (rs) {
                     ladyboys = rs.data;
                     return $scope.point;
-                }).then(loadImage);
-
-                /*
-                girls = [{ id: 1, image: "http://google.com", isGirl: true }, { id: 2, image: "http://google.com", isGirl: true },
-                    { id: 3, image: "http://google.com", isGirl: true }, { id: 4, image: "http://google.com", isGirl: true },
-                    { id: 5, image: "http://google.com", isGirl: true }]; //loadResources
-
-                ladyboys = [{ id: 1, image: "http://google.com", isGirl: false }, { id: 2, image: "http://google.com", isGirl: false },
-                    { id: 3, image: "http://google.com", isGirl: false }, { id: 4, image: "http://google.com", isGirl: false },
-                    { id: 5, image: "http://google.com", isGirl: false }]; //loadResource
-					*/
+                }).then(function () {
+                    loadImage($scope.point);
+                    $scope.showImg = true;
+                });
             };
 
-            function loadLeaderboard() {
-
-            };
+            
 
         }
         ]);
 
+
+        app.controller('leaderboardCtrl', ['$scope', '$http', function ($scope, $http) {
+            loadLeaderboard();
+
+            function loadLeaderboard() {
+                //Sort by score, only get top ten
+                var scoreUrl = 'https://api.mongolab.com/api/1/databases/ladyboy_challenge/collections/' +
+                               'leaderBoard?s={"score":-1}&l=10&apiKey=Rds2DpkLY7_VqsMfmgfSo_EdzafbQvOs';
+
+                $http.get(scoreUrl).then(function (rs) {
+                    $scope.leaderboard = rs.data;
+                });
+            };
+        }]);
+
+        app.controller('menuCtrl', ['$scope', '$http', function ($scope, $http) {
+
+            $scope.goPlay = function () {
+
+            };
+
+            $scope.goLeaderboard = function () {
+
+            };
+        }]);
     </script>
 
     <!--<script type="text/javascript" src="js/app/app.js"></script>
