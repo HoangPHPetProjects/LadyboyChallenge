@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Facebook Group Post</title>
+    <title>Challenge</title>
     <meta charset="UTF-8">
     <link type="text/css" rel="stylesheet" href="css/materialize.css" media="screen,projection" />
     <link type="text/css" rel="stylesheet" href="css/nprogress.css" media="screen,projection" />
@@ -14,9 +14,25 @@
             right: 80px;
             top: -2px;
         }
+
+        .row .col img {
+            margin-bottom: 45px;
+        }
+
+
+        /*#gameDiv {
+            min-height: calc(100vh - 70px);
+        }*/
+
+        footer {
+            height:70px;
+        }
+
+
     </style>
 </head>
 <body ng-app="app" ng-controller="myCtrl">
+
     <nav class="pink lighten-3" role="navigation">
         <div class="nav-wrapper container">
             <a id="logo-container" href="#" class="brand-logo center">Aswig Solutions</a>
@@ -34,18 +50,17 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="container" id="gameDiv">
+        
         <div class="row center">
-            <div ng-repeat="choice in choices" ng-click="choiceClick(choice)" class="col s6 m6 l3 card"> 
-				<div class="front"> 
-						<img class="col s11" ng-src="{{choice.image}}" />
-				</div> 
-				<div class="back">
-					{{choice.isGirl}}
-				</div> 				
+            <div ng-repeat="choice in choices" ng-click="choiceClick(choice)" class="col s10 offset-s1 m10 offset-m1 l6">
+                <img class="col s11" ng-src="{{choice.image}}" />
+                <!--{{choice.isGirl}}-->
             </div>
         </div>
     </div>
+
+
 
     <footer class="page-footer pink accent-2">
         <div class="footer-copyright">
@@ -55,14 +70,53 @@
         </div>
     </footer>
 
+    <div id="rightModal" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h4 class="purple-text text-accent-3">Right Choice</h4>
+            <p>You choose a girl. Your point: {{point}}</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Continue</a>
+        </div>
+    </div>
+
+    <div id="wrongModal" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h4 class="purple-text text-accent-3">Wrong Choice</h4>
+            <p>You choose a ldb. Game over!!!</p>
+
+            <div>
+                <p>You got a high score. Submit your name to leaderboard</p>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <i class="material-icons prefix">account_circle</i>
+                        <input id="icon_prefix" type="text" class="validate" />
+                        <label for="icon_prefix">Name</label>
+                    </div>
+                    <div class="col s6">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">
+                            Submit
+                            <i class="material-icons">send</i>
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Leaderboard</a>
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Start again</a>
+        </div>
+    </div>
+
+
     <script type="text/javascript" src="js/jquery-2.1.4.js"></script>
-	 <script type="text/javascript" src="js/jquery.flip.js"></script>
     <script type="text/javascript" src="js/materialize.js"></script>
     <script type="text/javascript" src="js/angular.js"></script>
 
     <script>
         function getRandomItem(input) {
-			var idx = Math.floor(Math.random() * input.length);
+            var idx = Math.floor(Math.random() * input.length);
             return input[idx];
         };
 
@@ -88,15 +142,16 @@
             var girls = [];
             var ladyboys = [];
 
-                loadResources();
+            loadResources();
             //loadImage($scope.point);
 
             $scope.choiceClick = function (item) {
                 if (item.isGirl) {
                     $scope.point++;
+                    $('#rightModal').openModal();
                 } else {
                     $scope.point = 0;
-                    alert("You fail");
+                    $('#wrongModal').openModal();
                 }
                 loadImage($scope.point);
             };
@@ -108,34 +163,30 @@
                 if (point < 5) {
                     items.push(getRandomItem(ladyboys));
                 } else if (point < 15) {
-                    //items.push 2 medium
                     items.push(getRandomItem(ladyboys));
                     items.push(getRandomItem(ladyboys));
                 } else {
-                    //item.push 3 hard
                     items.push(getRandomItem(ladyboys));
                     items.push(getRandomItem(ladyboys));
                     items.push(getRandomItem(ladyboys));
                 };
 
-                $scope.choices = shuffleArray(items);
-				
-				$(".card").flip();
+                $scope.choices = shuffleArray(items);               
             };
 
             function loadResources() {
-			    var girlUrl = 'https://api.mongolab.com/api/1/databases/ladyboy_challenge/collections/girls?apiKey=Rds2DpkLY7_VqsMfmgfSo_EdzafbQvOs';
-				var ldbUrl = 'https://api.mongolab.com/api/1/databases/ladyboy_challenge/collections/ladyboys?apiKey=Rds2DpkLY7_VqsMfmgfSo_EdzafbQvOs';
-			
-			    $http.get(girlUrl).then(function(rs){
-					girls = rs.data;
-					return ldbUrl;
-				}).then($http.get).then(function(rs){
-					ladyboys = rs.data;
-					return $scope.point;
-				}).then(loadImage);
-			
-				/*
+                var girlUrl = 'https://api.mongolab.com/api/1/databases/ladyboy_challenge/collections/girls?apiKey=Rds2DpkLY7_VqsMfmgfSo_EdzafbQvOs';
+                var ldbUrl = 'https://api.mongolab.com/api/1/databases/ladyboy_challenge/collections/ladyboys?apiKey=Rds2DpkLY7_VqsMfmgfSo_EdzafbQvOs';
+
+                $http.get(girlUrl).then(function (rs) {
+                    girls = rs.data;
+                    return ldbUrl;
+                }).then($http.get).then(function (rs) {
+                    ladyboys = rs.data;
+                    return $scope.point;
+                }).then(loadImage);
+
+                /*
                 girls = [{ id: 1, image: "http://google.com", isGirl: true }, { id: 2, image: "http://google.com", isGirl: true },
                     { id: 3, image: "http://google.com", isGirl: true }, { id: 4, image: "http://google.com", isGirl: true },
                     { id: 5, image: "http://google.com", isGirl: true }]; //loadResources
