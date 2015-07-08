@@ -2,6 +2,7 @@
     <div class="nav-wrapper container">
         <a id="logo-container" href="#" class="brand-logo center">Ladyboy Challenge</a>
     </div>
+    <a href="#/menu" id="back"><i class="material-icons">arrow_back</i></a>
 </nav>
 
 <div id="index-banner" class="container">
@@ -13,7 +14,13 @@
 <div class="container">
     <div class="container">
         <ul class="collection">
-            <li ng-repeat="player in leaderboard" class="collection-item"><div>{{player.name || 'Mr. Anonymous'}}<a class="secondary-content">{{player.score}}</a></div></li>
+            <li ng-repeat="player in leaderboard" class="collection-item">
+                <div>
+                    
+                    {{player.name || 'Mr. Anonymous'}}
+                    <a class="secondary-content"><i ng-if="$index < 3" class="material-icons">filter_{{$index + 1}}</i>  &nbsp; {{player.score}}</a>
+                </div>
+            </li>
         </ul>
     </div>
 </div>
