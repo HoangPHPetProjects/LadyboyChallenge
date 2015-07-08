@@ -61,6 +61,9 @@
     <Content Include="css\nprogress.css" />
     <Content Include="font\material-design-icons\LICENSE.txt" />
     <Content Include="font\material-design-icons\Material-Design-Icons.svg" />
+    <Content Include="menu.html" />
+    <Content Include="leaderboard.html" />
+    <Content Include="game.html" />
     <Content Include="index.html" />
     <Content Include="js\angular-animate.js" />
     <Content Include="js\angular-route.js" />

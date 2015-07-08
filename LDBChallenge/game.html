@@ -1,0 +1,33 @@
+﻿<nav class="pink lighten-3" role="navigation">
+    <div class="nav-wrapper container">
+        <a id="logo-container" href="#" class="brand-logo center">Ladyboy Challenge</a>
+    </div>
+    <h4 id="point">Point: {{point}}</h4>
+</nav>
+<div id="index-banner" class="container">
+    <div class="section no-pad-bot">
+        <h3 class="center purple-text text-accent-3">Choose the girl. Beware of the ladyboy.</h3>
+    </div>
+</div>
+
+<div class="container ng-hide" ng-show="showImg" id="gameDiv">
+    <div class="row center">
+        <div ng-repeat="choice in choices | limitTo: 2" ng-click="choiceClick(choice)" class="repeated-item col s10 offset-s1 m10 offset-m1 l6">
+            <img class="col s11" ng-src="{{choice.image}}" />
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div ng-if="choices.length > 2" class="row center">
+        <div ng-repeat="choice in choices | limitTo: -2" ng-click="choiceClick(choice)" class="repeated-item col s10 offset-s1 m10 offset-m1 l6">
+            <img class="col s11" ng-src="{{choice.image}}" />
+        </div>
+    </div>
+</div>
+
+<footer class="page-footer pink accent-2">
+    <div class="footer-copyright">
+        <div class="container">
+            Copyright by <a class="orange-text text-lighten-3" href="http://materializecss.com">H.Pham | AG Solutions</a>
+        </div>
+    </div>
+</footer>

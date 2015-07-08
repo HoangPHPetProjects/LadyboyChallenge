@@ -1,0 +1,27 @@
+﻿<nav class="pink lighten-3" role="navigation">
+    <div class="nav-wrapper container">
+        <a id="logo-container" href="#" class="brand-logo center">Ladyboy Challenge</a>
+    </div>
+</nav>
+
+<div id="index-banner" class="container">
+    <div class="section no-pad-bot">
+        <h3 class="center purple-text text-accent-3">The top ladyboy detectors</h3>
+    </div>
+</div>
+
+<div class="container">
+    <div class="container">
+        <ul class="collection">
+            <li ng-repeat="player in leaderboard" class="collection-item"><div>{{player.name || 'Mr. Anonymous'}}<a class="secondary-content">{{player.score}}</a></div></li>
+        </ul>
+    </div>
+</div>
+
+<footer class="page-footer pink accent-2">
+    <div class="footer-copyright">
+        <div class="container">
+            Copyright by <a class="orange-text text-lighten-3" href="http://materializecss.com">H.Pham | AG Solutions</a>
+        </div>
+    </div>
+</footer>
