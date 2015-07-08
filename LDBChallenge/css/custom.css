@@ -1,0 +1,121 @@
+﻿#menuDiv {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+}
+
+#headerDiv {
+    height: 15vh;
+}
+
+    #headerDiv h2 {
+        font-family: "Yanone Kaffeesatz";
+    }
+
+#bannerDiv {
+    height: 55vh;
+}
+
+    #bannerDiv img {
+        width: 40%;
+        height: auto;
+        -webkit-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.75);
+        -ms-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.75);
+        box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.75);
+    }
+
+#linkDiv {
+    height: 30vh;
+}
+
+    #linkDiv .btn-large {
+        width: 50%;
+        margin-top: 15px;
+        font-size: 300%;
+        background: #8e24aa;
+        height: 70px;
+        line-height: 70px;
+        font-weight: bold;
+        font-family: "Yanone Kaffeesatz";
+    }
+
+#point {
+    position: absolute;
+    right: 80px;
+    top: -2px;
+}
+
+#back {
+    position: absolute;
+    left: 15px;
+    top: -2px;
+}
+
+    #back i {
+        font-size: 65px;
+        font-weight: bold;
+    }
+
+
+.row .col img {
+    margin-top: 25px;
+}
+
+footer {
+    height: 70px;
+}
+
+#gameDiv {
+    -ms-opacity: 1;
+    opacity: 1;
+    display: block !important;
+    min-height: calc(100vh - 250px) !important;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+    #gameDiv::-webkit-scrollbar {
+        display: none;
+    }
+
+    #gameDiv.ng-hide-add.ng-hide-add-active,
+    #gameDiv.ng-hide-remove.ng-hide-remove-active {
+        -webkit-transition: all linear 1s;
+        -moz-transition: all linear 1s;
+        -ms-transition: all linear 1s;
+        -o-transition: all linear 1s;
+        transition: all linear 1s;
+    }
+
+
+    #gameDiv.ng-hide {
+        -ms-opacity: 0;
+        opacity: 0;
+    }
+
+.view-animate.ng-enter,
+.view-animate.ng-leave {
+    -webkit-transition: all 1.5s ease;
+    -moz-transition: all 1.5s ease;
+    -ms-transition: all 1.5s ease;
+    -o-transition: all 1.5s ease;
+    transition: all 1.5s ease;
+}
+
+.view-animate.ng-enter {
+    opacity: 0;
+}
+
+.view-animate.ng-enter-active {
+    opacity: 1;
+}
+
+.view-animate.ng-leave {
+    opacity: 1;
+}
+
+.view-animate.ng-leave-active {
+    opacity: 0;
+}
