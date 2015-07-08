@@ -1,0 +1,73 @@
+﻿<nav class="pink lighten-3" role="navigation">
+    <div class="nav-wrapper container">
+        <a id="logo-container" href="#" class="brand-logo center">Ladyboy Challenge</a>
+    </div>
+    <a href="#/menu" id="back"><i class="material-icons">arrow_back</i></a>
+    <h4 id="point">Point: {{point}}</h4>
+</nav>
+<div id="index-banner" class="container">
+    <div class="section no-pad-bot">
+        <h3 class="center purple-text text-accent-3">Choose the girl. Beware of the ladyboy.</h3>
+    </div>
+</div>
+
+<div class="container ng-hide" ng-show="showImg" id="gameDiv">
+    <div class="row center">
+        <div ng-repeat="choice in choices | limitTo: 2" ng-click="choiceClick(choice)" class="repeated-item col s10 offset-s1 m10 offset-m1 l6">
+            <img class="col s11" ng-src="{{choice.image}}" />
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div ng-if="choices.length > 2" class="row center">
+        <div ng-repeat="choice in choices | limitTo: -2" ng-click="choiceClick(choice)" class="repeated-item col s10 offset-s1 m10 offset-m1 l6">
+            <img class="col s11" ng-src="{{choice.image}}" />
+        </div>
+    </div>
+</div>
+
+<footer class="page-footer pink accent-2">
+    <div class="footer-copyright">
+        <div class="container">
+            Copyright by <a class="orange-text text-lighten-3" href="http://materializecss.com">H.Pham | AG Solutions</a>
+        </div>
+    </div>
+</footer>
+
+<div id="rightModal" class="modal bottom-sheet">
+    <div class="modal-content">
+        <h4 class="purple-text text-accent-3">Right Choice</h4>
+        <p>You choose a girl. Your point: {{point}}.</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Touch anywhere to continue</a>
+    </div>
+</div>
+
+<div id="wrongModal" class="modal bottom-sheet">
+    <div class="modal-content">
+        <h4 class="purple-text text-accent-3">Wrong Choice</h4>
+        <p>You choose a ladyboy. Game over!!!</p>
+
+        <div>
+            <p>You got a high score. Submit your name to leaderboard.</p>
+            <div class="row">
+                <div class="input-field col s6">
+                    <i class="material-icons prefix">account_circle</i>
+                    <input ng-model="playerName" id="icon_prefix" type="text" class="validate" />
+                    <label for="icon_prefix">Name</label>
+                </div>
+                <div class="col s6">
+                    <button ng-click="sendScore()" class="btn waves-effect waves-light" type="submit" name="action">
+                        Submit
+                        <i class="material-icons">send</i>
+                    </button>
+
+                    <button class="btn waves-effect waves-light" type="submit" name="action">
+                        Share on Facebook
+                        <i class="material-icons">public</i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
